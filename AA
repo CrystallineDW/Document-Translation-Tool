@@ -1,0 +1,146 @@
+package PAC;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+
+
+
+public class Sever {
+	public ServerSocket server;
+	
+	public static Socket client;
+	public static String comedata;
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Sever server = new Sever();
+		server.start();
+		
+	}
+	/**
+	 * 启动服务器
+	 */
+	public void start()
+	{
+		
+		
+		try {
+			server = new ServerSocket(2580);
+			
+			
+			this.receive();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+	}
+	/**
+	 * 接收客户端
+	 */
+	public void receive()
+	{
+		
+		try {
+			client = server.accept();
+			String msg = null;//接收客户端的请求信息
+			
+			
+			InputStreamReader back = new InputStreamReader(client.getInputStream());
+			BufferedReader back2 = new BufferedReader(back); 
+			comedata = back2.readLine();
+			
+			XC DX = new XC();
+			DX.start();
+			
+			//System.out.println(comedata);
+			
+			byte[] data = new byte[2048];
+
+			//响应
+			StringBuilder responsContext = new StringBuilder();
+			
+			String data1 = "<html>\r\n" + 
+					"<title>\r\n" + 
+					"</title>\r\n" + 
+					"<body>\r\n" + 
+					"	请求成功\r\n" + 
+					"</body>\r\n" + 
+					"</html>";
+			
+			responsContext = AddTop.add(responsContext, data1);
+			
+//			responsContext.append("<html>\r\n" + 
+//					"<title>\r\n" + 
+//					"</title>\r\n" + 
+//					"<body>\r\n" + 
+//					"	yes\r\n" + 
+//					"</body>\r\n" + 
+//					"</html>");
+//			
+			//输出
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+			bw.write(responsContext.toString());
+			
+			
+			bw.flush();
+			bw.close();
+			
+			this.receive();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+	
+	class XC extends Thread{
+		
+		public void run()
+		{
+			InputStreamReader back;
+			try {
+				if(comedata.indexOf("favicon.ico")!=-1)
+				{
+					
+				}
+				else {
+					System.out.println(comedata);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+	        
+		
+			
+		}
+		
+		
+		
+	}
+	
+	
+	/**
+	 * 关闭服务器
+	 */
+	public void stop()
+	{
+		
+		
+		
+		
+	}
+
+}
+
+
